@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinTrack AI: Capital & Wealth Optimizer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            dark: {
+              900: '#0b0f19',
+              850: '#0f172a',
+              800: '#1e293b',
+              700: '#334155'
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    .terminal-glow {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-dark-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-black">
+
+  <!-- ========================================================================= -->
+  <!-- TOP APP BAR & THREE-DOTS STRATEGIC MANAGER TRIGGER                        -->
+  <!-- ========================================================================= -->
+  <header class="h-16 border-b border-dark-800 bg-dark-850/80 backdrop-blur sticky top-0 z-40 px-6 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-brand-600 to-cyan-500 flex items-center justify-center font-black text-black text-xl shadow-lg shadow-brand-500/20">
+        ₹
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="font-bold tracking-tight text-white text-base">FinTrack <span class="text-brand-400">AI</span></span>
+          <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-brand-950 text-brand-400 border border-brand-800 font-semibold tracking-wider">v3.4 IND</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Capital & Wealth Underwriting Core</p>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center space-x-4">
+      <div id="top-sync-indicator" class="hidden items-center space-x-2 text-xs font-mono px-2.5 py-1 rounded-full border border-dark-700 bg-dark-900">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="text-slate-300">TELEMETRY: <strong class="text-brand-400">ONLINE</strong></span>
+      </div>
+
+      <!-- Settings Dropdown Button -->
+      <div class="relative">
+        <button id="menu-dots-btn" onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-dark-700 text-slate-400 hover:text-white transition">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="menu-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-dark-850 border border-dark-700 rounded-xl shadow-2xl z-50 py-2">
+          <div class="px-4 py-2 border-b border-dark-700">
+            <p class="text-xs font-semibold text-slate-200">Executive Controls</p>
+            <p class="text-[11px] text-slate-400">Configure secondary bypass assets</p>
+          </div>
+          <button onclick="openSettingsManager()" class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-dark-700 hover:text-brand-400 flex items-center space-x-2 transition">
+            <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            <span>Strategic Settings Manager</span>
+          </button>
+          <button onclick="triggerResetDemo()" class="w-full text-left px-4 py-2 text-xs text-rose-400 hover:bg-dark-700 flex items-center space-x-2 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Reset Demo State</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTAINER (ONBOARDING GATE OR 3-COLUMN DASHBOARD)                    -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 flex flex-col p-4 md:p-6 max-w-[1720px] w-full mx-auto">
+
+    <!-- ===================================================================== -->
+    <!-- STAGE-GATE ONBOARDING MODAL / VIEW (STEPS 1 - 6)                       -->
+    <!-- ===================================================================== -->
+    <div id="onboarding-container" class="flex-1 flex items-center justify-center py-6">
+      <div class="w-full max-w-xl bg-dark-850 border border-dark-800 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-dark-800">
+          <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-brand-500 to-cyan-500 transition-all duration-300 w-1/6"></div>
+        </div>
+
+        <div class="flex items-center justify-between mb-6 pt-2">
+          <span id="step-badge" class="px-2.5 py-1 rounded bg-brand-950 text-brand-400 text-xs font-mono font-bold border border-brand-900">
+            PHASE 1 OF 6
+          </span>
+          <span id="step-mandatory-tag" class="text-xs font-mono text-rose-400 bg-rose-950/60 border border-rose-900 px-2 py-0.5 rounded">
+            STRICT MANDATORY GATE
+          </span>
+        </div>
+
+        <!-- STEP 1: AUTHENTICATION -->
+        <div id="step-1" class="space-y-5">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Secure Financial Authentication</h2>
+            <p class="text-xs text-slate-400 mt-1">Authenticate to create an encrypted institutional financial ledger profile.</p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Corporate or Personal Email</label>
+              <input type="email" id="auth-email" placeholder="arjun.mehta@wealth.in" value="arjun.mehta@fintech.in"
+                class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 transition" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Secure Password</label>
+              <input type="password" id="auth-password" placeholder="••••••••••••"
+                oninput="validatePasswordComplexity(this.value)"
+                class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 transition" />
+            </div>
+
+            <!-- Password Criteria Rules List -->
+            <div id="pwd-rules" class="bg-dark-900 p-3.5 rounded-lg border border-dark-800 text-xs space-y-1.5 font-mono">
+              <p class="text-slate-400 font-sans font-medium text-[11px] mb-1">Strict Password Complexity Requirements:</p>
+              <div id="rule-len" class="text-slate-500 flex items-center space-x-1.5"><span>✗</span> <span>At least 8 characters in length</span></div>
+              <div id="rule-case" class="text-slate-500 flex items-center space-x-1.5"><span>✗</span> <span>Mixture of UPPERCASE and lowercase letters</span></div>
+              <div id="rule-num" class="text-slate-500 flex items-center space-x-1.5"><span>✗</span> <span>At least one numerical number (0-9)</span></div>
+              <div id="rule-sym" class="text-slate-500 flex items-center space-x-1.5"><span>✗</span> <span>At least one special symbol (@, #, $, %, etc.)</span></div>
+            </div>
+
+            <div id="auth-error-alert" class="hidden p-3 bg-rose-950/60 border border-rose-800 rounded-lg text-rose-300 text-xs">
+              Password complexity standard unfulfilled. Meet all conditions above before progressing.
+            </div>
+
+            <button onclick="submitStep1()" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-sm py-3 rounded-lg shadow-lg shadow-brand-500/25 transition">
+              Verify Credentials &amp; Proceed
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: 4-DIGIT MFA VERIFICATION -->
+        <div id="step-2" class="hidden space-y-5">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Identity Multi-Factor Verification</h2>
+            <p class="text-xs text-slate-400 mt-1">Enter the 4-digit verification token dispatched to your device.</p>
+          </div>
+
+          <div class="p-3 bg-brand-950/40 border border-brand-900/80 rounded-lg text-brand-300 text-xs">
+            Demo Presentation Token is pre-configured to: <span class="font-mono font-bold text-white bg-brand-900 px-2 py-0.5 rounded">1234</span>
+          </div>
+
+          <div class="flex justify-center space-x-3 py-4">
+            <input type="text" maxlength="1" id="mfa-1" class="w-14 h-14 text-center font-mono text-2xl font-bold bg-dark-900 border border-dark-700 rounded-xl focus:border-brand-500 focus:outline-none" oninput="mfaJump(this, 'mfa-2')" />
+            <input type="text" maxlength="1" id="mfa-2" class="w-14 h-14 text-center font-mono text-2xl font-bold bg-dark-900 border border-dark-700 rounded-xl focus:border-brand-500 focus:outline-none" oninput="mfaJump(this, 'mfa-3')" />
+            <input type="text" maxlength="1" id="mfa-3" class="w-14 h-14 text-center font-mono text-2xl font-bold bg-dark-900 border border-dark-700 rounded-xl focus:border-brand-500 focus:outline-none" oninput="mfaJump(this, 'mfa-4')" />
+            <input type="text" maxlength="1" id="mfa-4" class="w-14 h-14 text-center font-mono text-2xl font-bold bg-dark-900 border border-dark-700 rounded-xl focus:border-brand-500 focus:outline-none" oninput="checkAutoMfa()" />
+          </div>
+
+          <div id="mfa-error" class="hidden text-center text-xs text-rose-400 font-mono">
+            Invalid Token. Enter demonstration code 1234.
+          </div>
+
+          <div class="flex space-x-2">
+            <button onclick="autoFillMfa()" class="w-1/3 border border-dark-700 hover:border-dark-600 text-slate-300 text-xs font-medium py-3 rounded-lg transition">
+              Quick Test: 1234
+            </button>
+            <button onclick="submitStep2()" class="w-2/3 bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-sm py-3 rounded-lg shadow-lg shadow-brand-500/25 transition">
+              Verify Token
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: HOUSEHOLD DEMOGRAPHICS -->
+        <div id="step-3" class="hidden space-y-5">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Household Demographics</h2>
+            <p class="text-xs text-slate-400 mt-1">Profile data baseline required for dynamic tax and per-capita baseline underwriting.</p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Primary Account Holder Name</label>
+              <input type="text" id="demo-name" value="Arjun Mehta" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Age</label>
+                <input type="number" id="demo-age" value="34" min="18" max="100" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Co-Income Earners</label>
+                <input type="number" id="demo-earners" value="2" min="1" max="10" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500">Co-contributory earners directly aggregate household cash reserves.</p>
+
+            <button onclick="submitStep3()" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-sm py-3 rounded-lg shadow-lg shadow-brand-500/25 transition">
+              Lock Demographics &amp; Continue
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: INFLOW & FIXED LIABILITIES -->
+        <div id="step-4" class="hidden space-y-5">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Inflow &amp; Fixed Liabilities Assessment</h2>
+            <p class="text-xs text-slate-400 mt-1">Gross earnings and non-negotiable living infrastructure outlays.</p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Gross Monthly Household Inflow (Total in ₹)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-slate-400 font-mono">₹</span>
+                <input type="number" id="fin-income" value="185000" class="w-full bg-dark-900 border border-dark-700 rounded-lg pl-8 pr-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-2">Primary Residential Status</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center space-x-2 border border-dark-700 bg-dark-900 p-3 rounded-lg cursor-pointer hover:border-brand-500 transition">
+                  <input type="radio" name="res-type" value="leased" checked onchange="toggleRentInput(true)" class="text-brand-500 focus:ring-0" />
+                  <span class="text-xs font-medium text-slate-200">Leased Asset (Rented)</span>
+                </label>
+                <label class="flex items-center space-x-2 border border-dark-700 bg-dark-900 p-3 rounded-lg cursor-pointer hover:border-brand-500 transition">
+                  <input type="radio" name="res-type" value="owned" onchange="toggleRentInput(false)" class="text-brand-500 focus:ring-0" />
+                  <span class="text-xs font-medium text-slate-200">Real Estate Equity (Self Owned)</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="rent-box">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Monthly Lease/Rent Outflow (₹)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-slate-400 font-mono">₹</span>
+                <input type="number" id="fin-rent" value="38000" class="w-full bg-dark-900 border border-dark-700 rounded-lg pl-8 pr-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+            </div>
+
+            <button onclick="submitStep4()" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-sm py-3 rounded-lg shadow-lg shadow-brand-500/25 transition">
+              Verify Fixed Baseline &amp; Continue
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 5: VARIABLE CORE EXPENSES BASELINE & PERMANENT LOCK TRIGGER -->
+        <div id="step-5" class="hidden space-y-5">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Variable Core Expenses Baseline</h2>
+            <p class="text-xs text-amber-400/90 font-mono mt-1 p-2 bg-amber-950/40 border border-amber-900 rounded">
+              ⚠️ Note: Enter your absolute lowest baseline, as unexpected monthly events and variations will be calculated dynamically later.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Minimum Guaranteed Monthly Grocery Outlay (₹)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-slate-400 font-mono">₹</span>
+                <input type="number" id="fin-groceries" value="16000" class="w-full bg-dark-900 border border-dark-700 rounded-lg pl-8 pr-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Minimum Guaranteed Vehicle Fuel &amp; Maintenance (₹)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-slate-400 font-mono">₹</span>
+                <input type="number" id="fin-vehicle" value="8500" class="w-full bg-dark-900 border border-dark-700 rounded-lg pl-8 pr-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+            </div>
+
+            <div class="p-3 bg-dark-900 border border-dark-800 rounded-lg text-[11px] text-slate-400">
+              <strong class="text-brand-400">Read-Only Lockout Protocol:</strong> Submitting this step locks Steps 3, 4, and 5 into an immutable statistical anchor to safeguard Net Disposable Income calculations.
+            </div>
+
+            <button onclick="submitStep5AndLockProfile()" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-sm py-3 rounded-lg shadow-lg shadow-brand-500/25 transition">
+              Establish Locked Disposable Income (NDI)
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 6: LIABILITIES, ASSETS & TARGETS (ONLY SKIPPABLE STEP) -->
+        <div id="step-6" class="hidden space-y-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-white tracking-tight">Liabilities &amp; Savings Target Matrix</h2>
+              <p class="text-xs text-slate-400 mt-1">Short-term debts, existing long-term loans, and capital growth objectives.</p>
+            </div>
+            <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-900 font-bold">
+              Skippable Phase
+            </span>
+          </div>
+
+          <div class="space-y-4 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Short term debts -->
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Short-Term Unsecured Liabilities (Minor Debts / IOUs in ₹)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-slate-400 font-mono">₹</span>
+                <input type="number" id="step6-shortdebt" value="15000" class="w-full bg-dark-900 border border-dark-700 rounded-lg pl-8 pr-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-500" />
+              </div>
+            </div>
+
+            <!-- Long term loans -->
+            <div class="p-3 bg-dark-900 rounded-lg border border-dark-700 space-y-3">
+              <p class="text-xs font-semibold text-brand-400">Existing Active Long-Term Loan (e.g., Home or Car Loan)</p>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-[11px] text-slate-400">Loan Title</label>
+                  <input type="text" id="step6-loanname" value="HDFC Bank Car Loan" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-400">Principal Balance (₹)</label>
+                  <input type="number" id="step6-loanprincipal" value="480000" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-[11px] text-slate-400">Annual Interest Rate (%)</label>
+                  <input type="number" id="step6-loanrate" value="9.2" step="0.1" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-400">Tenure Remaining (Months)</label>
+                  <input type="number" id="step6-loantenure" value="36" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Savings Goals -->
+            <div class="p-3 bg-dark-900 rounded-lg border border-dark-700 space-y-3">
+              <p class="text-xs font-semibold text-brand-400">Core Strategic Savings Goal</p>
+              <div>
+                <label class="text-[11px] text-slate-400">Target Objective Description</label>
+                <input type="text" id="step6-goallabel" value="Equity Portfolio & Emergency Buffer" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-[11px] text-slate-400">Target Capital (₹)</label>
+                  <input type="number" id="step6-goalamount" value="1000000" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-400">Current Accumulated (₹)</label>
+                  <input type="number" id="step6-goalcurrent" value="340000" class="w-full bg-dark-850 border border-dark-700 rounded px-2.5 py-1.5 text-xs text-white" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between space-x-3">
+            <!-- LOCKOUT RULE: Step 6 is the ONLY step with Skip for Now -->
+            <button onclick="skipStep6()" class="w-1/2 py-3 px-4 border border-dark-700 hover:border-slate-500 text-slate-300 text-xs font-semibold rounded-lg transition text-center">
+              Skip for Now (Setup via •••)
+            </button>
+            <button onclick="submitStep6()" class="w-1/2 bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-xs py-3 px-4 rounded-lg shadow-lg shadow-brand-500/25 transition">
+              Commit Portfolio &amp; Launch
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3-COLUMN ENTERPRISE DASHBOARD COCKPIT (SHOWN AFTER ONBOARDING)             -->
+    <!-- ========================================================================= -->
+    <div id="dashboard-cockpit" class="hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+      <!-- ===================================================================== -->
+      <!-- COLUMN 1 (LEFT): THE FINANCIAL FOUNDATION (Col span: 3)               -->
+      <!-- ===================================================================== -->
+      <section class="lg:col-span-3 space-y-4">
+
+        <!-- Locked Profile Summary Card -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg relative overflow-hidden">
+          <div class="flex items-center justify-between pb-3 border-b border-dark-800">
+            <div>
+              <span class="text-[10px] font-mono uppercase text-brand-400 tracking-wider">FOUNDATIONAL ANCHOR</span>
+              <h3 class="text-sm font-bold text-white flex items-center space-x-1.5">
+                <span id="card-user-name">Arjun Mehta</span>
+                <span title="Locked Dataset - Statistical Integrity Protected" class="text-xs text-amber-400">🔒</span>
+              </h3>
+            </div>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-dark-800 text-slate-300 border border-dark-700">
+              Age <span id="card-user-age">34</span> • <span id="card-user-earners">2</span> Earners
+            </span>
+          </div>
+
+          <div class="mt-3 space-y-2 text-xs">
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Gross Household Inflow:</span>
+              <span class="font-mono text-white font-semibold" id="card-gross-income">₹1,85,000</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Primary Lease/Rent:</span>
+              <span class="font-mono text-rose-400" id="card-rent">₹38,000</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Min Guaranteed Groceries:</span>
+              <span class="font-mono text-rose-400" id="card-groceries">₹16,000</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Min Vehicle &amp; Fuel:</span>
+              <span class="font-mono text-rose-400" id="card-vehicle">₹8,500</span>
+            </div>
+
+            <!-- Net Disposable Income Lockbox -->
+            <div class="pt-3 border-t border-dark-800 mt-2 bg-dark-900/90 -mx-4 -mb-4 p-4 rounded-b-xl">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-brand-400 uppercase tracking-wide">Permanent NDI Baseline:</span>
+                <span class="text-base font-bold font-mono text-brand-400" id="card-locked-ndi">₹1,22,500</span>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1 font-mono">Free Cash Flow available before discretionary debt underwriting.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Loan Calculator & Injector Button -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Liability Engine</h4>
+            <span class="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">Underwriter Active</span>
+          </div>
+          <p class="text-xs text-slate-400">Verify EMIs against locked NDI thresholds before committing borrowed leverage.</p>
+          <button onclick="openLoanModal()" class="w-full bg-dark-800 hover:bg-dark-700 border border-brand-500/40 text-brand-400 text-xs font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 transition shadow">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span>Inject New Active Loan/Liability</span>
+          </button>
+        </div>
+
+        <!-- Active Long Term Debt Register -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Active Debt Portfolio</h4>
+            <span class="text-[10px] font-mono text-slate-400" id="debt-count-badge">1 Instrument</span>
+          </div>
+
+          <div id="liabilities-list" class="space-y-2.5">
+            <!-- Dynamically Rendered Liabilities -->
+          </div>
+        </div>
+
+        <!-- Sub-Module: Insurance & P2P Portfolio Summary -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex justify-between items-center">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Protected &amp; P2P Matrix</h4>
+            <div class="space-x-1">
+              <button onclick="openAddInsuranceModal()" class="text-[10px] font-mono bg-dark-800 hover:bg-dark-700 px-2 py-1 rounded text-cyan-400 border border-dark-700">+ Insurance</button>
+              <button onclick="openAddP2PModal()" class="text-[10px] font-mono bg-dark-800 hover:bg-dark-700 px-2 py-1 rounded text-brand-400 border border-dark-700">+ P2P Lent</button>
+            </div>
+          </div>
+
+          <!-- Insurance Policies List -->
+          <div>
+            <span class="text-[10px] font-mono text-slate-500 uppercase">Active Asset Policies</span>
+            <div id="insurance-list-mini" class="space-y-1.5 mt-1"></div>
+          </div>
+
+          <!-- P2P Lending List -->
+          <div class="pt-2 border-t border-dark-800">
+            <span class="text-[10px] font-mono text-slate-500 uppercase">Lent Capital Receivables</span>
+            <div id="p2p-list-mini" class="space-y-1.5 mt-1"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- COLUMN 2 (CENTER): THE OPERATIONAL HUB (Col span: 6)                  -->
+      <!-- ===================================================================== -->
+      <section class="lg:col-span-6 space-y-4">
+
+        <!-- Gated Android Background SMS Listener Terminal -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-400" id="sms-live-indicator"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Automated Android SMS BroadcastReceiver Terminal</h4>
+            </div>
+            <span id="sms-permission-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-dark-800 text-slate-400 border border-dark-700">
+              STANDBY
+            </span>
+          </div>
+
+          <!-- Permission Prompt Container -->
+          <div id="sms-permission-box" class="p-3.5 bg-dark-900 border border-dark-700 rounded-lg space-y-2.5">
+            <div class="flex items-start space-x-3">
+              <div class="p-2 rounded bg-brand-950 text-brand-400 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+              </div>
+              <div>
+                <p class="text-xs text-slate-200 font-semibold">Grant Financial Notification Sync?</p>
+                <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">
+                  FinTrack AI requires permission to monitor incoming Indian banking transaction alerts to automatically record expenses without manual intervention.
+                </p>
+              </div>
+            </div>
+            <div class="flex justify-end space-x-2 pt-1">
+              <button onclick="denySmsPermission()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white border border-dark-700 hover:bg-dark-800 rounded-md transition">
+                Deny (Force Manual Logging)
+              </button>
+              <button onclick="grantSmsPermission()" class="px-3.5 py-1.5 text-xs font-bold text-dark-900 bg-brand-500 hover:bg-brand-600 rounded-md transition shadow">
+                Grant Permission
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Terminal Screen -->
+          <div id="sms-terminal-view" class="hidden space-y-2">
+            <div class="bg-black/80 rounded-lg p-3 font-mono text-xs border border-dark-700 text-brand-400 h-28 overflow-y-auto space-y-1 terminal-glow" id="terminal-stream">
+              <div class="text-slate-500">// BroadcastReceiver daemon listening on intents: android.provider.Telephony.SMS_RECEIVED</div>
+              <div class="text-slate-500">// NLP Parser initialized for: SBI, HDFC, ICICI, AXIS, KOTAK bank structures.</div>
+            </div>
+
+            <!-- Simulation Console Trigger -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+              <div class="flex space-x-1">
+                <button onclick="simulateBankSms('swiggy')" class="text-[11px] font-mono bg-dark-800 hover:bg-dark-700 text-slate-300 px-2.5 py-1.5 rounded border border-dark-700 transition">
+                  Simulate Swiggy (₹550)
+                </button>
+                <button onclick="simulateBankSms('fuel')" class="text-[11px] font-mono bg-dark-800 hover:bg-dark-700 text-amber-300 px-2.5 py-1.5 rounded border border-dark-700 transition">
+                  Simulate Fuel HPCL (₹3,200)
+                </button>
+                <button onclick="simulateBankSms('loan')" class="text-[11px] font-mono bg-dark-800 hover:bg-dark-700 text-cyan-300 px-2.5 py-1.5 rounded border border-dark-700 transition">
+                  Simulate Car Loan EMI (₹15,315)
+                </button>
+              </div>
+              <button onclick="simulateCustomSms()" class="text-[11px] font-mono bg-brand-500/20 text-brand-300 border border-brand-500/40 hover:bg-brand-500 hover:text-black px-2.5 py-1.5 rounded transition font-bold">
+                + Custom Inbound SMS
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conversational Ledger AI Chatbot -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Conversational Ledger Intelligence</h4>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400">Natural Language Parser</span>
+          </div>
+
+          <div class="bg-dark-900 rounded-lg p-3 text-xs max-h-40 overflow-y-auto space-y-2 border border-dark-800" id="chatbot-logs">
+            <div class="p-2 bg-dark-850 rounded border border-dark-700 text-slate-300">
+              <span class="font-bold text-brand-400 font-mono">FinTrack AI:</span> Type any expense or debt outlay naturally (e.g., <em class="text-slate-400">"Paid ₹10,000 towards home loan"</em> or <em class="text-slate-400">"Spent ₹1,200 on groceries"</em>).
+            </div>
+          </div>
+
+          <form onsubmit="handleChatSubmit(event)" class="flex space-x-2">
+            <input type="text" id="chat-input" placeholder="e.g. Paid ₹10,000 towards Car Loan or ₹450 dinner"
+              class="flex-1 bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 font-mono" />
+            <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold px-4 py-2 rounded-lg text-xs transition">
+              Dispatch
+            </button>
+          </form>
+        </div>
+
+        <!-- Live Transactional Ledger Table -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-white">Active Operational Ledger</h4>
+              <p class="text-[11px] text-slate-400">Real-time synchronized transactions in Indian Numbering Format</p>
+            </div>
+            <span class="text-xs font-mono text-brand-400 font-bold" id="total-spent-badge">Total Outflows: ₹0</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-dark-900 text-slate-400 font-mono text-[11px] uppercase border-b border-dark-700">
+                <tr>
+                  <th class="py-2.5 px-3">Date/Time</th>
+                  <th class="py-2.5 px-3">Narration &amp; Origin</th>
+                  <th class="py-2.5 px-3">Category</th>
+                  <th class="py-2.5 px-3 text-right">Debit Outlay</th>
+                </tr>
+              </thead>
+              <tbody id="transaction-table-body" class="divide-y divide-dark-800 font-mono">
+                <!-- Dynamically Populated Transactions -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- COLUMN 3 (RIGHT): STRATEGIC FORECASTING & ALLOCATION (Col span: 3)    -->
+      <!-- ===================================================================== -->
+      <section class="lg:col-span-3 space-y-4">
+
+        <!-- Upper Section: CapEx Feasibility Optimizer -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-white">CapEx Feasibility Optimizer</h4>
+            <span class="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">NDI Constraint Evaluator</span>
+          </div>
+          <p class="text-xs text-slate-400">Stress-test luxury or one-off capital purchases against real-time Net Disposable Income.</p>
+
+          <div class="space-y-2.5">
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Asset or Item Label</label>
+              <input type="text" id="capex-item" placeholder="e.g. MacBook Pro M3 Max / Swiss Vacation" value="Sony A7 IV Camera Rig" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-brand-500 focus:outline-none" />
+            </div>
+
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Proposed Purchase Value (₹)</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1.5 text-slate-400 font-mono text-xs">₹</span>
+                <input type="number" id="capex-val" value="240000" class="w-full bg-dark-900 border border-dark-700 rounded-lg pl-7 pr-3 py-1.5 text-xs text-white font-mono focus:border-brand-500 focus:outline-none" />
+              </div>
+            </div>
+
+            <button onclick="evaluateCapEx()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs py-2.5 rounded-lg transition shadow">
+              Run CapEx Stress Test
+            </button>
+
+            <!-- Feasibility Result Display Box -->
+            <div id="capex-result" class="hidden p-3 rounded-lg border text-xs space-y-1 font-mono transition">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Savings Asset Allocation Targets -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-white">Strategic Savings Allocation</h4>
+            <span class="text-[10px] font-mono text-brand-400" id="savings-percent-header">34% Complete</span>
+          </div>
+
+          <div id="savings-progress-container" class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-300 font-semibold" id="savings-goal-name">Emergency Buffer &amp; Equities</span>
+                <span class="font-mono text-brand-400" id="savings-ratio-text">₹3,40,000 / ₹10,00,000</span>
+              </div>
+              <div class="w-full bg-dark-900 h-2.5 rounded-full overflow-hidden border border-dark-700">
+                <div id="savings-bar-fill" class="bg-gradient-to-r from-brand-500 to-cyan-400 h-full transition-all duration-500" style="width: 34%;"></div>
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-dark-900 rounded-lg border border-dark-800 flex justify-between items-center text-xs">
+              <span class="text-slate-400">Monthly Surplus Siphon:</span>
+              <span class="font-mono text-brand-400 font-semibold" id="savings-monthly-siphon">+₹25,000/mo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower Section: Automated Payment Maturity & Fuel Cycle Alert Logs -->
+        <div class="bg-dark-850 border border-dark-800 rounded-xl p-4 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-white">Payment Maturity &amp; Cycle Logs</h4>
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          </div>
+
+          <!-- Alert feed with 28-day cycle notification requirement -->
+          <div id="maturity-alerts-feed" class="space-y-2 text-xs font-mono">
+            <!-- Simulated Fuel replenishment alert (28 days logic) -->
+            <div class="p-2.5 rounded bg-amber-950/40 border border-amber-900/80 text-amber-300 space-y-1">
+              <div class="flex items-center justify-between font-bold text-[11px]">
+                <span>CYCLE ALERT: FUEL EXPENDITURE</span>
+                <span class="text-[10px] bg-amber-900 text-amber-200 px-1 rounded">28 DAYS</span>
+              </div>
+              <p class="text-[11px] text-amber-200/90 leading-tight">
+                Cycle Alert: It has been 28 business days since your last fuel acquisition. Time to rebook asset allocation!
+              </p>
+            </div>
+
+            <!-- Dynamic Alerts for Insurance & P2P -->
+            <div id="dynamic-insurance-alerts"></div>
+            <div id="dynamic-p2p-alerts"></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: INJECT NEW ACTIVE LOAN & INTERACTIVE EMI VERIFICATION UX           -->
+  <!-- ========================================================================= -->
+  <div id="modal-loan" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-dark-850 border border-dark-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-5">
+      <div class="flex justify-between items-center border-b border-dark-800 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-white">Loan Underwriting &amp; Injection Engine</h3>
+          <p class="text-xs text-slate-400">Calculate EMI &amp; verify debt burden against locked NDI.</p>
+        </div>
+        <button onclick="closeLoanModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs text-slate-300 block mb-1">Loan Instrument Title</label>
+          <input type="text" id="loan-input-name" placeholder="e.g. Axis Bank Personal Loan" value="SBI Solar Green Loan" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-xs text-white" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs text-slate-300 block mb-1">Loan Amount (Principal ₹)</label>
+            <input type="number" id="loan-input-principal" value="250000" oninput="calculateInteractiveEMI()" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-xs text-white font-mono" />
+          </div>
+          <div>
+            <label class="text-xs text-slate-300 block mb-1">Annual Interest Rate (%)</label>
+            <input type="number" id="loan-input-rate" value="10.5" step="0.1" oninput="calculateInteractiveEMI()" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-xs text-white font-mono" />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-300 block mb-1">Tenure (In Months)</label>
+          <input type="number" id="loan-input-tenure" value="24" oninput="calculateInteractiveEMI()" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-xs text-white font-mono" />
+        </div>
+
+        <!-- Calculated Monthly EMI Figure Display -->
+        <div class="bg-dark-900 p-4 rounded-xl border border-dark-700 text-center space-y-1">
+          <span class="text-[11px] uppercase tracking-wider text-slate-400 font-mono">Calculated Monthly Payment (EMI)</span>
+          <div class="text-2xl font-bold font-mono text-white" id="modal-calculated-emi">₹11,598</div>
+          <span class="text-[10px] text-slate-500 font-mono">Formula: [P × r × (1+r)^n] / [(1+r)^n - 1]</span>
+        </div>
+
+        <!-- MANDATORY INTERACTIVE CONFIRMATION BOX -->
+        <div class="p-3.5 bg-dark-900/90 rounded-xl border border-cyan-900/80 space-y-2">
+          <p class="text-xs text-cyan-200 font-semibold">Is this the correct monthly amount?</p>
+          <p class="text-[11px] text-slate-400">Confirm automated payment projection before subjecting this obligation to underwriting.</p>
+          <div class="flex space-x-2 pt-1">
+            <button id="btn-verify-yes" onclick="confirmEmiVerification(true)" class="flex-1 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs rounded transition">
+              ✓ Yes, Looks Accurate
+            </button>
+            <button id="btn-verify-adjust" onclick="confirmEmiVerification(false)" class="flex-1 py-1.5 border border-dark-700 hover:bg-dark-800 text-slate-300 text-xs rounded transition">
+              Adjust Manually
+            </button>
+          </div>
+        </div>
+
+        <!-- RISK UNDERWRITING BADGE RENDERING CONTAINER -->
+        <div id="risk-underwriting-container" class="space-y-1">
+          <label class="text-[11px] uppercase font-mono text-slate-400">Institutional Underwriting Decision:</label>
+          <div id="risk-badge-view" class="p-3 rounded-lg border text-xs font-mono font-bold flex items-center justify-between">
+            <!-- Dynamically populated safe / moderate / denied badge -->
+          </div>
+        </div>
+
+        <button id="btn-inject-loan" onclick="commitInjectedLoan()" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-xs py-3 rounded-lg transition shadow-lg shadow-brand-500/20">
+          Inject Obligation into Active Portfolio
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ADD INSURANCE POLICY                                               -->
+  <!-- ========================================================================= -->
+  <div id="modal-insurance" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-dark-850 border border-dark-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-dark-800 pb-2">
+        <h3 class="text-sm font-bold text-white">Register Insurance Asset Protection</h3>
+        <button onclick="closeInsuranceModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Policy Description / Underwriter</label>
+          <input type="text" id="ins-input-name" placeholder="HDFC ERGO Health Suraksha" value="Star Comprehensive Health" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Premium Amount (₹)</label>
+          <input type="number" id="ins-input-amount" value="18400" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Exact Due Maturity Date</label>
+          <input type="date" id="ins-input-date" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+        </div>
+        <button onclick="commitInsurancePolicy()" class="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-2.5 rounded-lg transition mt-2">
+          Add Insurance Coverage Record
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ADD P2P LENT RECEIVABLE                                            -->
+  <!-- ========================================================================= -->
+  <div id="modal-p2p" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-dark-850 border border-dark-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-dark-800 pb-2">
+        <h3 class="text-sm font-bold text-white">Peer Lending Receivable Matrix</h3>
+        <button onclick="closeP2PModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Borrower / Counterparty Name</label>
+          <input type="text" id="p2p-input-borrower" placeholder="Kavita Rao (Bridge loan)" value="Vikram Sharma" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Principal Capital Lent (₹)</label>
+          <input type="number" id="p2p-input-principal" value="50000" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+        </div>
+        <div class="flex items-center space-x-2 py-1">
+          <input type="checkbox" id="p2p-input-hasinterest" onchange="toggleP2PInterest(this.checked)" class="text-brand-500 focus:ring-0 rounded bg-dark-900 border-dark-700" />
+          <label for="p2p-input-hasinterest" class="text-slate-300">Capital Accrues Yield / Interest?</label>
+        </div>
+        <div id="p2p-interest-box" class="hidden">
+          <label class="block text-slate-300 mb-1">Annual Interest Rate (%)</label>
+          <input type="number" id="p2p-input-rate" value="12" step="0.5" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Target Collection Maturity Date</label>
+          <input type="date" id="p2p-input-date" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+        </div>
+        <button onclick="commitP2PRecord()" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold py-2.5 rounded-lg transition mt-2">
+          Log Lending Contract
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: STRATEGIC SETTINGS MANAGER (Three-Dots Access)                     -->
+  <!-- ========================================================================= -->
+  <div id="modal-settings" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-dark-850 border border-dark-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-dark-800 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-white">Strategic Settings Manager</h3>
+          <p class="text-xs text-slate-400">Configure skippable Step 6 assets &amp; portfolio targets post-onboarding.</p>
+        </div>
+        <button onclick="closeSettingsManager()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs max-h-[420px] overflow-y-auto pr-1">
+        <div>
+          <label class="text-slate-300 block mb-1">Short-Term Unsecured Liabilities (₹)</label>
+          <input type="number" id="cfg-shortdebt" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+        </div>
+
+        <div class="border-t border-dark-800 pt-3">
+          <label class="text-slate-300 block mb-1">Strategic Savings Target Purpose</label>
+          <input type="text" id="cfg-goallabel" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-slate-400 block mb-1">Target Capital (₹)</label>
+            <input type="number" id="cfg-goalamount" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">Current Saved (₹)</label>
+            <input type="number" id="cfg-goalcurrent" class="w-full bg-dark-900 border border-dark-700 rounded px-3 py-2 text-white font-mono" />
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end space-x-2 pt-2 border-t border-dark-800">
+        <button onclick="closeSettingsManager()" class="px-4 py-2 border border-dark-700 rounded-lg text-slate-300 hover:bg-dark-800 text-xs">
+          Cancel
+        </button>
+        <button onclick="saveStrategicSettings()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold rounded-lg text-xs">
+          Save Adjustments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- APPLICATION REACTIVE STATE & CONTROLLER JAVASCRIPT LOGIC                   -->
+  <!-- ========================================================================= -->
+  <script>
+    // --- FORMATTERS (INDIAN NUMBERING FORMAT) ---
+    function formatINR(number) {
+      if (isNaN(number) || number === null || number === undefined) number = 0;
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+      }).format(number);
+    }
+
+    // Set today's date defaults
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    const in30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const in60Days = new Date(today.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    // --- APPLICATION CENTRAL STATE ---
+    const appState = {
+      user: {
+        email: '',
+        authenticated: false,
+        mfaVerified: false,
+        name: 'Arjun Mehta',
+        age: 34,
+        coEarners: 2,
+        residenceType: 'leased', // leased or owned
+        grossIncome: 185000,
+        rent: 38000,
+        minGroceries: 16000,
+        minVehicle: 8500,
+        lockedNDI: 122500,
+        profileLocked: false
+      },
+      smsListener: {
+        permissionGranted: false,
+        active: false,
+        simulatedCount: 0
+      },
+      liabilities: [
+        {
+          id: 1,
+          name: 'HDFC Car Loan',
+          principal: 480000,
+          originalPrincipal: 480000,
+          rate: 9.2,
+          tenureMonths: 36,
+          emi: 15315,
+          status: 'SAFE TO BORROW'
+        }
+      ],
+      shortTermDebts: 15000,
+      savingsGoal: {
+        purpose: 'Equity Portfolio & Emergency Buffer',
+        targetAmount: 1000000,
+        currentAmount: 340000
+      },
+      insurancePolicies: [
+        { id: 1, name: 'Star Comprehensive Health Policy', premium: 18400, dueDate: in30Days }
+      ],
+      p2pLending: [
+        { id: 1, borrower: 'Vikram Sharma', principal: 50000, hasInterest: true, rate: 12, dueDate: in60Days }
+      ],
+      transactions: [],
+      currentOnboardingStep: 1,
+      currentCalculatedEmi: 0
+    };
+
+    // --- PASSWORD COMPLEXITY VALIDATOR (STEP 1) ---
+    function validatePasswordComplexity(pwd) {
+      const lenValid = pwd.length >= 8;
+      const caseValid = /[A-Z]/.test(pwd) && /[a-z]/.test(pwd);
+      const numValid = /[0-9]/.test(pwd);
+      const symValid = /[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd);
+
+      updateRule('rule-len', lenValid);
+      updateRule('rule-case', caseValid);
+      updateRule('rule-num', numValid);
+      updateRule('rule-sym', symValid);
+
+      return lenValid && caseValid && numValid && symValid;
+    }
+
+    function updateRule(elementId, isValid) {
+      const el = document.getElementById(elementId);
+      if (isValid) {
+        el.className = "text-brand-400 flex items-center space-x-1.5 font-bold";
+        el.children[0].textContent = "✓";
+      } else {
+        el.className = "text-slate-500 flex items-center space-x-1.5";
+        el.children[0].textContent = "✗";
+      }
+    }
+
+    // --- ONBOARDING NAVIGATION & STAGE-GATES ---
+    function setStep(stepNumber) {
+      appState.currentOnboardingStep = stepNumber;
+      for (let i = 1; i <= 6; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (el) el.classList.add('hidden');
+      }
+      const activeEl = document.getElementById(`step-${stepNumber}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Update progress bar
+      const fill = document.getElementById('progress-bar-fill');
+      fill.style.width = `${(stepNumber / 6) * 100}%`;
+
+      document.getElementById('step-badge').textContent = `PHASE ${stepNumber} OF 6`;
+
+      // Mandatory / Skippable Tag
+      const mandatoryTag = document.getElementById('step-mandatory-tag');
+      if (stepNumber === 6) {
+        mandatoryTag.textContent = "OPTIONAL / SKIPPABLE";
+        mandatoryTag.className = "text-xs font-mono text-amber-400 bg-amber-950/60 border border-amber-900 px-2 py-0.5 rounded";
+      } else {
+        mandatoryTag.textContent = "STRICT MANDATORY GATE";
+        mandatoryTag.className = "text-xs font-mono text-rose-400 bg-rose-950/60 border border-rose-900 px-2 py-0.5 rounded";
+      }
+    }
+
+    function submitStep1() {
+      const email = document.getElementById('auth-email').value;
+      const pwd = document.getElementById('auth-password').value;
+      const isValid = validatePasswordComplexity(pwd);
+
+      const err = document.getElementById('auth-error-alert');
+      if (!isValid) {
+        err.classList.remove('hidden');
+        return;
+      }
+      err.classList.add('hidden');
+      appState.user.email = email;
+      appState.user.authenticated = true;
+      setStep(2);
+    }
+
+    // --- MFA AUTO JUMP & VALIDATION (STEP 2) ---
+    function mfaJump(current, nextId) {
+      if (current.value.length >= 1) {
+        const next = document.getElementById(nextId);
+        if (next) next.focus();
+      }
+    }
+
+    function autoFillMfa() {
+      document.getElementById('mfa-1').value = '1';
+      document.getElementById('mfa-2').value = '2';
+      document.getElementById('mfa-3').value = '3';
+      document.getElementById('mfa-4').value = '4';
+      submitStep2();
+    }
+
+    function checkAutoMfa() {
+      const code = getMfaCode();
+      if (code === '1234') {
+        submitStep2();
+      }
+    }
+
+    function getMfaCode() {
+      return (
+        document.getElementById('mfa-1').value +
+        document.getElementById('mfa-2').value +
+        document.getElementById('mfa-3').value +
+        document.getElementById('mfa-4').value
+      );
+    }
+
+    function submitStep2() {
+      const code = getMfaCode();
+      const err = document.getElementById('mfa-error');
+      if (code === '1234') {
+        err.classList.add('hidden');
+        appState.user.mfaVerified = true;
+        setStep(3);
+      } else {
+        err.classList.remove('hidden');
+      }
+    }
+
+    // --- DEMOGRAPHICS (STEP 3) ---
+    function submitStep3() {
+      const name = document.getElementById('demo-name').value;
+      const age = parseInt(document.getElementById('demo-age').value) || 30;
+      const earners = parseInt(document.getElementById('demo-earners').value) || 1;
+
+      if (!name) return alert('Please enter primary account holder name.');
+
+      appState.user.name = name;
+      appState.user.age = age;
+      appState.user.coEarners = earners;
+      setStep(4);
+    }
+
+    // --- INFLOW & FIXED LIABILITIES (STEP 4) ---
+    function toggleRentInput(isLeased) {
+      const box = document.getElementById('rent-box');
+      if (isLeased) {
+        box.classList.remove('hidden');
+      } else {
+        box.classList.add('hidden');
+        document.getElementById('fin-rent').value = '0';
+      }
+    }
+
+    function submitStep4() {
+      const gross = parseFloat(document.getElementById('fin-income').value) || 0;
+      const rentType = document.querySelector('input[name="res-type"]:checked').value;
+      const rent = rentType === 'leased' ? (parseFloat(document.getElementById('fin-rent').value) || 0) : 0;
+
+      if (gross <= 0) return alert('Enter a valid Gross Monthly Household Inflow.');
+
+      appState.user.grossIncome = gross;
+      appState.user.residenceType = rentType;
+      appState.user.rent = rent;
+      setStep(5);
+    }
+
+    // --- STEP 5: VARIABLE BASELINE & READ-ONLY LOCK ---
+    function submitStep5AndLockProfile() {
+      const groceries = parseFloat(document.getElementById('fin-groceries').value) || 0;
+      const vehicle = parseFloat(document.getElementById('fin-vehicle').value) || 0;
+
+      appState.user.minGroceries = groceries;
+      appState.user.minVehicle = vehicle;
+
+      // CALCULATE LOCKED NDI: Gross - (Rent + Min Groceries + Min Vehicle)
+      const totalFixedAndBaselines = appState.user.rent + groceries + vehicle;
+      appState.user.lockedNDI = appState.user.grossIncome - totalFixedAndBaselines;
+      appState.user.profileLocked = true; // PERMANENT READ-ONLY LOCK
+
+      // Update Card Displays
+      document.getElementById('card-user-name').textContent = appState.user.name;
+      document.getElementById('card-user-age').textContent = appState.user.age;
+      document.getElementById('card-user-earners').textContent = appState.user.coEarners;
+      document.getElementById('card-gross-income').textContent = formatINR(appState.user.grossIncome);
+      document.getElementById('card-rent').textContent = formatINR(appState.user.rent);
+      document.getElementById('card-groceries').textContent = formatINR(appState.user.minGroceries);
+      document.getElementById('card-vehicle').textContent = formatINR(appState.user.minVehicle);
+      document.getElementById('card-locked-ndi').textContent = formatINR(appState.user.lockedNDI);
+
+      // Advance to Step 6
+      setStep(6);
+    }
+
+    // --- STEP 6 (SKIPPABLE ONLY) ---
+    function skipStep6() {
+      // Step 6 skipped: proceed directly to full dashboard cockpit
+      completeOnboarding();
+    }
+
+    function submitStep6() {
+      const shortDebt = parseFloat(document.getElementById('step6-shortdebt').value) || 0;
+      const loanName = document.getElementById('step6-loanname').value;
+      const loanPrincipal = parseFloat(document.getElementById('step6-loanprincipal').value) || 0;
+      const loanRate = parseFloat(document.getElementById('step6-loanrate').value) || 0;
+      const loanTenure = parseInt(document.getElementById('step6-loantenure').value) || 12;
+
+      const goalLabel = document.getElementById('step6-goallabel').value;
+      const goalAmount = parseFloat(document.getElementById('step6-goalamount').value) || 0;
+      const goalCurrent = parseFloat(document.getElementById('step6-goalcurrent').value) || 0;
+
+      appState.shortTermDebts = shortDebt;
+
+      if (loanPrincipal > 0) {
+        const emi = computeMonthlyEmi(loanPrincipal, loanRate, loanTenure);
+        const status = determineRiskCategory(emi, appState.user.lockedNDI);
+        appState.liabilities = [{
+          id: Date.now(),
+          name: loanName,
+          principal: loanPrincipal,
+          originalPrincipal: loanPrincipal,
+          rate: loanRate,
+          tenureMonths: loanTenure,
+          emi: emi,
+          status: status
+        }];
+      }
+
+      if (goalAmount > 0) {
+        appState.savingsGoal = {
+          purpose: goalLabel,
+          targetAmount: goalAmount,
+          currentAmount: goalCurrent
+        };
+      }
+
+      completeOnboarding();
+    }
+
+    function completeOnboarding() {
+      document.getElementById('onboarding-container').classList.add('hidden');
+      document.getElementById('dashboard-cockpit').classList.remove('hidden');
+      document.getElementById('top-sync-indicator').classList.remove('hidden');
+      document.getElementById('top-sync-indicator').classList.add('flex');
+
+      // Populate default dates on modals
+      document.getElementById('ins-input-date').value = in30Days;
+      document.getElementById('p2p-input-date').value = in60Days;
+
+      renderDashboardState();
+    }
+
+    // --- FINANCIAL MATH FORMULAS ---
+    function computeMonthlyEmi(principal, annualRate, tenureMonths) {
+      if (annualRate <= 0) return Math.round(principal / tenureMonths);
+      const monthlyRate = (annualRate / 12) / 100;
+      const factor = Math.pow(1 + monthlyRate, tenureMonths);
+      const emi = (principal * monthlyRate * factor) / (factor - 1);
+      return Math.round(emi);
+    }
+
+    function determineRiskCategory(emi, ndi) {
+      const ratio = emi / ndi;
+      if (ratio < 0.30) {
+        return 'SAFE TO BORROW';
+      } else if (ratio <= 0.60) {
+        return 'MODERATE DIFFICULTY';
+      } else {
+        return 'HIGH RISK / BORROWING DENIED';
+      }
+    }
+
+    // --- INTERACTIVE LOAN CALCULATOR & VERIFICATION UX ---
+    function openLoanModal() {
+      document.getElementById('modal-loan').classList.remove('hidden');
+      calculateInteractiveEMI();
+    }
+
+    function closeLoanModal() {
+      document.getElementById('modal-loan').classList.add('hidden');
+    }
+
+    function calculateInteractiveEMI() {
+      const p = parseFloat(document.getElementById('loan-input-principal').value) || 0;
+      const r = parseFloat(document.getElementById('loan-input-rate').value) || 0;
+      const n = parseInt(document.getElementById('loan-input-tenure').value) || 1;
+
+      const emi = computeMonthlyEmi(p, r, n);
+      appState.currentCalculatedEmi = emi;
+      document.getElementById('modal-calculated-emi').textContent = formatINR(emi);
+
+      renderRiskUnderwritingBadge(emi);
+    }
+
+    function confirmEmiVerification(isAccurate) {
+      const btnYes = document.getElementById('btn-verify-yes');
+      const btnAdj = document.getElementById('btn-verify-adjust');
+
+      if (isAccurate) {
+        btnYes.className = "flex-1 py-1.5 bg-emerald-500 text-black font-bold text-xs rounded transition ring-2 ring-emerald-300";
+        btnAdj.className = "flex-1 py-1.5 border border-dark-700 text-slate-400 text-xs rounded transition";
+      } else {
+        const manualVal = prompt("Enter verified monthly EMI in ₹:", appState.currentCalculatedEmi);
+        if (manualVal) {
+          appState.currentCalculatedEmi = parseInt(manualVal) || appState.currentCalculatedEmi;
+          document.getElementById('modal-calculated-emi').textContent = formatINR(appState.currentCalculatedEmi);
+          renderRiskUnderwritingBadge(appState.currentCalculatedEmi);
+        }
+      }
+    }
+
+    function renderRiskUnderwritingBadge(emi) {
+      const category = determineRiskCategory(emi, appState.user.lockedNDI);
+      const view = document.getElementById('risk-badge-view');
+      const ratioPct = Math.round((emi / appState.user.lockedNDI) * 100);
+
+      if (category === 'SAFE TO BORROW') {
+        view.className = "p-3 rounded-lg border text-xs font-mono font-bold flex items-center justify-between bg-emerald-950/60 border-emerald-800 text-emerald-300";
+        view.innerHTML = `<span>[SAFE TO BORROW]</span><span class="text-[11px] font-normal font-sans">EMI utilizes ${ratioPct}% of NDI (&lt;30%)</span>`;
+        document.getElementById('btn-inject-loan').disabled = false;
+        document.getElementById('btn-inject-loan').className = "w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold text-xs py-3 rounded-lg transition shadow-lg shadow-brand-500/20";
+      } else if (category === 'MODERATE DIFFICULTY') {
+        view.className = "p-3 rounded-lg border text-xs font-mono font-bold flex items-center justify-between bg-amber-950/60 border-amber-800 text-amber-300";
+        view.innerHTML = `<span>[MODERATE DIFFICULTY]</span><span class="text-[11px] font-normal font-sans">EMI consumes ${ratioPct}% of NDI (30% - 60%)</span>`;
+        document.getElementById('btn-inject-loan').disabled = false;
+        document.getElementById('btn-inject-loan').className = "w-full bg-amber-500 hover:bg-amber-600 text-dark-900 font-bold text-xs py-3 rounded-lg transition shadow-lg shadow-amber-500/20";
+      } else {
+        view.className = "p-3 rounded-lg border text-xs font-mono font-bold flex items-center justify-between bg-rose-950/60 border-rose-800 text-rose-300";
+        view.innerHTML = `<span>[HIGH RISK / BORROWING DENIED]</span><span class="text-[11px] font-normal font-sans">EMI consumes ${ratioPct}% of NDI (&gt;60% Danger)</span>`;
+        document.getElementById('btn-inject-loan').disabled = true;
+        document.getElementById('btn-inject-loan').className = "w-full bg-dark-800 text-rose-400 border border-rose-900 font-bold text-xs py-3 rounded-lg cursor-not-allowed opacity-75";
+      }
+    }
+
+    function commitInjectedLoan() {
+      const name = document.getElementById('loan-input-name').value;
+      const principal = parseFloat(document.getElementById('loan-input-principal').value) || 0;
+      const rate = parseFloat(document.getElementById('loan-input-rate').value) || 0;
+      const tenure = parseInt(document.getElementById('loan-input-tenure').value) || 12;
+      const emi = appState.currentCalculatedEmi;
+      const status = determineRiskCategory(emi, appState.user.lockedNDI);
+
+      appState.liabilities.push({
+        id: Date.now(),
+        name,
+        principal,
+        originalPrincipal: principal,
+        rate,
+        tenureMonths: tenure,
+        emi,
+        status
+      });
+
+      closeLoanModal();
+      renderDashboardState();
+      appendChatLog("System Underwriter", `Injected active obligation: ${name} with verified monthly debit of ${formatINR(emi)}. Underwriting state: [${status}].`);
+    }
+
+    // --- INSURANCE SUB-MODULE ---
+    function openAddInsuranceModal() {
+      document.getElementById('modal-insurance').classList.remove('hidden');
+    }
+    function closeInsuranceModal() {
+      document.getElementById('modal-insurance').classList.add('hidden');
+    }
+    function commitInsurancePolicy() {
+      const name = document.getElementById('ins-input-name').value;
+      const premium = parseFloat(document.getElementById('ins-input-amount').value) || 0;
+      const date = document.getElementById('ins-input-date').value || in30Days;
+
+      appState.insurancePolicies.push({ id: Date.now(), name, premium, dueDate: date });
+      closeInsuranceModal();
+      renderDashboardState();
+    }
+
+    // --- P2P LENDING SUB-MODULE ---
+    function openAddP2PModal() {
+      document.getElementById('modal-p2p').classList.remove('hidden');
+    }
+    function closeP2PModal() {
+      document.getElementById('modal-p2p').classList.add('hidden');
+    }
+    function toggleP2PInterest(checked) {
+      document.getElementById('p2p-interest-box').classList.toggle('hidden', !checked);
+    }
+    function commitP2PRecord() {
+      const borrower = document.getElementById('p2p-input-borrower').value;
+      const principal = parseFloat(document.getElementById('p2p-input-principal').value) || 0;
+      const hasInterest = document.getElementById('p2p-input-hasinterest').checked;
+      const rate = hasInterest ? (parseFloat(document.getElementById('p2p-input-rate').value) || 0) : 0;
+      const dueDate = document.getElementById('p2p-input-date').value || in60Days;
+
+      appState.p2pLending.push({ id: Date.now(), borrower, principal, hasInterest, rate, dueDate });
+      closeP2PModal();
+      renderDashboardState();
+    }
+
+    // --- PERMISSION-BASED BACKGROUND SMS LISTENER ---
+    function grantSmsPermission() {
+      appState.smsListener.permissionGranted = true;
+      appState.smsListener.active = true;
+
+      document.getElementById('sms-permission-box').classList.add('hidden');
+      document.getElementById('sms-terminal-view').classList.remove('hidden');
+
+      const badge = document.getElementById('sms-permission-badge');
+      badge.textContent = "LISTENER ENGAGED";
+      badge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold";
+
+      appendTerminal("BROADCAST RECEIVER GRANTED: Monitoring incoming SMS alerts for ICICI, HDFC, SBI, AXIS.");
+    }
+
+    function denySmsPermission() {
+      appState.smsListener.permissionGranted = false;
+      appState.smsListener.active = false;
+
+      const badge = document.getElementById('sms-permission-badge');
+      badge.textContent = "PERMISSION DENIED - MANUAL ONLY";
+      badge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800";
+
+      document.getElementById('sms-live-indicator').className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+      appendChatLog("Security Daemon", "SMS Listener Permission Denied. Automatic bank synchronization is locked. All outflows must be recorded manually via the conversational console.");
+    }
+
+    function appendTerminal(text) {
+      const stream = document.getElementById('terminal-stream');
+      const time = new Date().toLocaleTimeString('en-IN', { hour12: false });
+      const row = document.createElement('div');
+      row.className = "text-slate-200";
+      row.innerHTML = `<span class="text-brand-400">[${time}]</span> ${text}`;
+      stream.appendChild(row);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function simulateBankSms(type) {
+      if (!appState.smsListener.permissionGranted) {
+        alert("Permission not granted. SMS BroadcastReceiver is inactive.");
+        return;
+      }
+
+      let rawSms = "";
+      if (type === 'swiggy') {
+        rawSms = `Alert: ₹550.00 debited from SBI A/C XX8910 on ${formattedDate} for transaction at SWIGGY BANGALORE. Avl Bal: ₹1,12,400. Ref 481920`;
+      } else if (type === 'fuel') {
+        rawSms = `Alert: ₹3,200.00 debited from HDFC Bank A/C XX4112 on ${formattedDate} at HPCL AUTO STATION. Avl Bal: ₹1,09,200.`;
+      } else if (type === 'loan') {
+        rawSms = `Alert: ₹15,315.00 debited from Axis A/C on ${formattedDate} towards HDFC Car Loan EMI payment. Ref: LOAN-SVC-8849`;
+      }
+
+      parseAndExecuteSms(rawSms);
+    }
+
+    function simulateCustomSms() {
+      if (!appState.smsListener.permissionGranted) {
+        alert("Permission not granted. SMS BroadcastReceiver is inactive.");
+        return;
+      }
+      const custom = prompt("Enter simulated Indian Bank SMS string:", `Alert: ₹1,250.00 debited from ICICI Bank on ${formattedDate} at RELIANCE RETAIL`);
+      if (custom) parseAndExecuteSms(custom);
+    }
+
+    // NLP / REGEX BANK SMS PARSER
+    function parseAndExecuteSms(rawText) {
+      appendTerminal(`[INBOUND SMS] ${rawText}`);
+
+      // Extract amount: ₹ followed by digits/commas
+      const amountMatch = rawText.match(/₹\s*([\d,]+(\.\d{2})?)/i) || rawText.match(/(?:rs\.?|inr)\s*([\d,]+(\.\d{2})?)/i);
+      let amount = 0;
+      if (amountMatch) {
+        amount = parseFloat(amountMatch[1].replace(/,/g, ''));
+      }
+
+      let vendor = "General Expense";
+      let category = "Discretionary";
+
+      // Detect vendor / loan keywords
+      const upper = rawText.toUpperCase();
+      if (upper.includes("SWIGGY") || upper.includes("ZOMATO")) {
+        vendor = "Swiggy Food Logistics";
+        category = "Dining";
+      } else if (upper.includes("HPCL") || upper.includes("IOCL") || upper.includes("BPCL") || upper.includes("FUEL")) {
+        vendor = "HPCL Fuel Dispenser";
+        category = "Fuel / Logistics";
+        // Trigger cycle alert verification
+        triggerFuelCycleAlert();
+      } else if (upper.includes("LOAN") || upper.includes("EMI")) {
+        vendor = "Loan Service Outlay";
+        category = "Debt Service";
+      } else if (upper.includes("RELIANCE")) {
+        vendor = "Reliance Retail";
+        category = "Groceries";
+      }
+
+      // Check if it's debt service to execute dynamic dual reduction
+      const isDebtService = category === 'Debt Service' || upper.includes("LOAN");
+
+      recordTransaction({
+        date: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        narration: vendor,
+        source: 'SMS Auto-Intercept',
+        category: category,
+        amount: amount,
+        isDebtService: isDebtService
+      });
+
+      appendTerminal(`✓ PARSED SUCCESS: Extracted ₹${amount.toLocaleString('en-IN')} | Vendor: ${vendor} | Cat: ${category}`);
+    }
+
+    function triggerFuelCycleAlert() {
+      // Injects notice of fuel log
+      appendChatLog("Cycle Engine", "Fuel acquisition logged. 28-day countdown re-anchored to track fleet/vehicle maintenance baselines.");
+    }
+
+    // --- CONVERSATIONAL LEDGER AI CHATBOT & PARSER ---
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatLog("User", text);
+      input.value = '';
+
+      processNaturalLanguageExpense(text);
+    }
+
+    function appendChatLog(sender, text) {
+      const box = document.getElementById('chatbot-logs');
+      const div = document.createElement('div');
+      div.className = sender === 'User' ? 'p-2 bg-dark-800 rounded border border-dark-700 text-slate-100 font-mono text-[11px]' : 'p-2 bg-dark-900/90 rounded border border-brand-900 text-brand-300 font-mono text-[11px]';
+      div.innerHTML = `<strong class="${sender === 'User' ? 'text-cyan-400' : 'text-brand-400'}">${sender}:</strong> ${text}`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function processNaturalLanguageExpense(text) {
+      // Extract amount using regex
+      const matchAmount = text.match(/(?:₹|rs\.?|inr)?\s*([\d,]+(?:\.\d+)?)/i);
+      let amount = 0;
+      if (matchAmount) {
+        amount = parseFloat(matchAmount[1].replace(/,/g, ''));
+      }
+
+      const lower = text.toLowerCase();
+      let isDebtService = false;
+      let targetLoanIndex = -1;
+
+      // Identify if loan payment
+      if (lower.includes("loan") || lower.includes("emi") || lower.includes("debt")) {
+        isDebtService = true;
+        // Check for specific match in active loans
+        targetLoanIndex = appState.liabilities.findIndex(l => lower.includes(l.name.toLowerCase()) || lower.includes("car") || lower.includes("home"));
+      }
+
+      let category = "Discretionary";
+      if (isDebtService) category = "Debt Service";
+      else if (lower.includes("fuel") || lower.includes("petrol") || lower.includes("diesel")) category = "Fuel / Logistics";
+      else if (lower.includes("grocery") || lower.includes("groceries") || lower.includes("food")) category = "Groceries";
+
+      recordTransaction({
+        date: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        narration: text,
+        source: 'Conversational AI',
+        category: category,
+        amount: amount,
+        isDebtService: isDebtService,
+        loanTargetIndex: targetLoanIndex
+      });
+
+      if (isDebtService) {
+        appendChatLog("FinTrack AI", `Executed Debt Service protocol! Debited ${formatINR(amount)} from active cash reserves AND synchronized liability principal downwards.`);
+      } else {
+        appendChatLog("FinTrack AI", `Logged outlay of ${formatINR(amount)} categorized under [${category}]. Remaining NDI adjusted.`);
+      }
+    }
+
+    // --- TRANSACTION DUAL REDUCTION ENGINE ---
+    function recordTransaction(tx) {
+      appState.transactions.unshift(tx);
+
+      // 1. Subtract from locked NDI / Free Cash Flow
+      appState.user.lockedNDI -= tx.amount;
+
+      // 2. DEBT SERVICE INTEGRATION LOGIC:
+      // If user logs outlay indicating debt service (e.g., "Paid ₹10,000 towards home loan"),
+      // reduce Remaining Principal Balance dynamically on their Long-Term Liabilities table.
+      if (tx.isDebtService && appState.liabilities.length > 0) {
+        const idx = tx.loanTargetIndex >= 0 ? tx.loanTargetIndex : 0;
+        const targetLoan = appState.liabilities[idx];
+        if (targetLoan) {
+          targetLoan.principal = Math.max(0, targetLoan.principal - tx.amount);
+        }
+      }
+
+      renderDashboardState();
+    }
+
+    // --- CAPEX FEASIBILITY OPTIMIZER ---
+    function evaluateCapEx() {
+      const item = document.getElementById('capex-item').value;
+      const cost = parseFloat(document.getElementById('capex-val').value) || 0;
+      const res = document.getElementById('capex-result');
+      res.classList.remove('hidden');
+
+      const currentNDI = appState.user.lockedNDI;
+
+      if (cost <= currentNDI) {
+        // High Feasibility
+        const remaining = currentNDI - cost;
+        res.className = "p-3 rounded-lg border text-xs space-y-1 font-mono bg-emerald-950/70 border-emerald-800 text-emerald-300";
+        res.innerHTML = `
+          <div class="font-bold flex justify-between">
+            <span>[CAPEX FEASIBLE: APPROVED]</span>
+            <span>100% CASH BUFFER</span>
+          </div>
+          <p class="text-[11px] text-slate-300">
+            Acquiring <strong>${item}</strong> will consume ${formatINR(cost)}, leaving ${formatINR(remaining)} in unencumbered monthly NDI. No debt underwriting required.
+          </p>
+        `;
+      } else if (cost <= currentNDI * 3) {
+        // Requires Amortization
+        const tenureMonths = Math.ceil(cost / (currentNDI * 0.4));
+        const installment = Math.round(cost / tenureMonths);
+        res.className = "p-3 rounded-lg border text-xs space-y-1 font-mono bg-amber-950/70 border-amber-800 text-amber-300";
+        res.innerHTML = `
+          <div class="font-bold flex justify-between">
+            <span>[REQUIRES TRANCHE FINANCING]</span>
+            <span>${tenureMonths} MONTHS HORIZON</span>
+          </div>
+          <p class="text-[11px] text-slate-300">
+            Outlay exceeds instantaneous free cash (${formatINR(currentNDI)}). Recommended structure: Siphon ${formatINR(installment)}/month across ${tenureMonths} monthly billing cycles to avert liquidity distress.
+          </p>
+        `;
+      } else {
+        // High Risk / Denied
+        res.className = "p-3 rounded-lg border text-xs space-y-1 font-mono bg-rose-950/70 border-rose-800 text-rose-300";
+        res.innerHTML = `
+          <div class="font-bold flex justify-between">
+            <span>[CRITICAL RISK / INFEASIBLE]</span>
+            <span>CAPITAL DEFICIT</span>
+          </div>
+          <p class="text-[11px] text-slate-300">
+            Deficit Alert: Purchase cost of ${formatINR(cost)} aggressively exceeds existing free cash flows. Committing this capital risks catastrophic asset liquidation.
+          </p>
+        `;
+      }
+    }
+
+    // --- THREE-DOTS SETTINGS MANAGER (POST-ONBOARDING CONFIG) ---
+    function toggleMenu() {
+      const menu = document.getElementById('menu-dropdown');
+      menu.classList.toggle('hidden');
+    }
+
+    function openSettingsManager() {
+      toggleMenu();
+      document.getElementById('cfg-shortdebt').value = appState.shortTermDebts;
+      document.getElementById('cfg-goallabel').value = appState.savingsGoal.purpose;
+      document.getElementById('cfg-goalamount').value = appState.savingsGoal.targetAmount;
+      document.getElementById('cfg-goalcurrent').value = appState.savingsGoal.currentAmount;
+      document.getElementById('modal-settings').classList.remove('hidden');
+    }
+
+    function closeSettingsManager() {
+      document.getElementById('modal-settings').classList.add('hidden');
+    }
+
+    function saveStrategicSettings() {
+      appState.shortTermDebts = parseFloat(document.getElementById('cfg-shortdebt').value) || 0;
+      appState.savingsGoal.purpose = document.getElementById('cfg-goallabel').value;
+      appState.savingsGoal.targetAmount = parseFloat(document.getElementById('cfg-goalamount').value) || 1;
+      appState.savingsGoal.currentAmount = parseFloat(document.getElementById('cfg-goalcurrent').value) || 0;
+
+      closeSettingsManager();
+      renderDashboardState();
+      appendChatLog("Settings Engine", "Strategic settings updated for Step 6 bypass portfolio targets.");
+    }
+
+    function triggerResetDemo() {
+      if (confirm("Reset application to initial Stage-Gate onboarding?")) {
+        window.location.reload();
+      }
+    }
+
+    // --- FULL DASHBOARD RE-RENDERER ---
+    function renderDashboardState() {
+      // 1. Update Core Profile & NDI Card
+      document.getElementById('card-locked-ndi').textContent = formatINR(appState.user.lockedNDI);
+
+      // 2. Render Active Liabilities with Dynamic Principal Balances
+      const liabilitiesList = document.getElementById('liabilities-list');
+      liabilitiesList.innerHTML = '';
+      document.getElementById('debt-count-badge').textContent = `${appState.liabilities.length} Instruments`;
+
+      appState.liabilities.forEach(l => {
+        const item = document.createElement('div');
+        const badgeColor = l.status === 'SAFE TO BORROW' ? 'text-emerald-400 bg-emerald-950/80 border-emerald-800' :
+                           l.status === 'MODERATE DIFFICULTY' ? 'text-amber-400 bg-amber-950/80 border-amber-800' :
+                           'text-rose-400 bg-rose-950/80 border-rose-800';
+
+        item.className = "p-3 bg-dark-900 rounded-lg border border-dark-700 text-xs space-y-1.5";
+        item.innerHTML = `
+          <div class="flex justify-between items-start">
+            <span class="font-bold text-white">${l.name}</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border ${badgeColor}">${l.status}</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Remaining Principal:</span>
+            <span class="font-mono text-cyan-400 font-bold">${formatINR(l.principal)}</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Monthly Verified EMI:</span>
+            <span class="font-mono text-rose-400">${formatINR(l.emi)}/mo</span>
+          </div>
+        `;
+        liabilitiesList.appendChild(item);
+      });
+
+      // 3. Render Insurance Mini
+      const insList = document.getElementById('insurance-list-mini');
+      insList.innerHTML = '';
+      appState.insurancePolicies.forEach(ins => {
+        const row = document.createElement('div');
+        row.className = "flex justify-between items-center text-xs p-1.5 bg-dark-900 rounded border border-dark-800";
+        row.innerHTML = `
+          <span class="text-slate-300 font-medium truncate max-w-[150px]">${ins.name}</span>
+          <span class="font-mono text-cyan-400">${formatINR(ins.premium)}</span>
+        `;
+        insList.appendChild(row);
+      });
+
+      // 4. Render P2P Mini
+      const p2pList = document.getElementById('p2p-list-mini');
+      p2pList.innerHTML = '';
+      appState.p2pLending.forEach(p => {
+        const yieldText = p.hasInterest ? `(${p.rate}% Yield)` : '(No Interest)';
+        row = document.createElement('div');
+        row.className = "flex justify-between items-center text-xs p-1.5 bg-dark-900 rounded border border-dark-800";
+        row.innerHTML = `
+          <div>
+            <span class="text-slate-300 font-medium">${p.borrower}</span>
+            <span class="text-[10px] text-slate-500 block">${yieldText}</span>
+          </div>
+          <span class="font-mono text-brand-400">${formatINR(p.principal)}</span>
+        `;
+        p2pList.appendChild(row);
+      });
+
+      // 5. Render Transaction Table
+      const tBody = document.getElementById('transaction-table-body');
+      tBody.innerHTML = '';
+      let totalSpent = 0;
+
+      appState.transactions.forEach(t => {
+        totalSpent += t.amount;
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-dark-800/50 transition";
+        tr.innerHTML = `
+          <td class="py-2 px-3 text-slate-400 text-[11px]">${t.date}</td>
+          <td class="py-2 px-3">
+            <div class="font-medium text-white">${t.narration}</div>
+            <div class="text-[10px] text-slate-500">${t.source}</div>
+          </td>
+          <td class="py-2 px-3">
+            <span class="px-2 py-0.5 rounded text-[10px] ${t.isDebtService ? 'bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold' : 'bg-dark-900 text-slate-300 border border-dark-700'}">
+              ${t.category}
+            </span>
+          </td>
+          <td class="py-2 px-3 text-right text-rose-400 font-bold">${formatINR(t.amount)}</td>
+        `;
+        tBody.appendChild(tr);
+      });
+
+      document.getElementById('total-spent-badge').textContent = `Total Outflows: ${formatINR(totalSpent)}`;
+
+      // 6. Update Savings Progress Meter
+      const goal = appState.savingsGoal;
+      const pct = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100));
+      document.getElementById('savings-goal-name').textContent = goal.purpose;
+      document.getElementById('savings-percent-header').textContent = `${pct}% Complete`;
+      document.getElementById('savings-ratio-text').textContent = `${formatINR(goal.currentAmount)} / ${formatINR(goal.targetAmount)}`;
+      document.getElementById('savings-bar-fill').style.width = `${pct}%`;
+
+      // 7. Render Lifecycle Notifications for Insurance & P2P
+      renderLifecycleReminders();
+    }
+
+    // --- CONTINUOUS LIFECYCLE NOTIFICATION ENGINE ---
+    function renderLifecycleReminders() {
+      const insContainer = document.getElementById('dynamic-insurance-alerts');
+      const p2pContainer = document.getElementById('dynamic-p2p-alerts');
+      insContainer.innerHTML = '';
+      p2pContainer.innerHTML = '';
+
+      // Insurance Premium Alerts
+      appState.insurancePolicies.forEach(ins => {
+        const alertEl = document.createElement('div');
+        alertEl.className = "p-2.5 rounded bg-cyan-950/40 border border-cyan-900/80 text-cyan-300 space-y-1";
+        alertEl.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-[11px]">
+            <span>INSURANCE PREMIUM DUE</span>
+            <span class="text-[10px] bg-cyan-900 text-cyan-200 px-1 rounded">${ins.dueDate}</span>
+          </div>
+          <p class="text-[11px] text-cyan-200/90 leading-tight">
+            Asset Protection: Siphon ${formatINR(ins.premium)} for policy '${ins.name}' to ensure uninterrupted risk shielding.
+          </p>
+        `;
+        insContainer.appendChild(alertEl);
+      });
+
+      // P2P Collection Maturity Alerts
+      appState.p2pLending.forEach(p => {
+        const totalYield = p.hasInterest ? p.principal * (1 + (p.rate / 100)) : p.principal;
+        const alertEl = document.createElement('div');
+        alertEl.className = "p-2.5 rounded bg-brand-950/40 border border-brand-900/80 text-brand-300 space-y-1";
+        alertEl.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-[11px]">
+            <span>P2P CAPITAL MATURITY</span>
+            <span class="text-[10px] bg-brand-900 text-brand-200 px-1 rounded">${p.dueDate}</span>
+          </div>
+          <p class="text-[11px] text-brand-200/90 leading-tight">
+            Receivable Due: Initiate recovery of ${formatINR(totalYield)} from ${p.borrower} on target maturity date.
+          </p>
+        `;
+        p2pContainer.appendChild(alertEl);
+      });
+    }
+
+    // Initialize password rules on load
+    validatePasswordComplexity("");
+  </script>
+</body>
+</html>
